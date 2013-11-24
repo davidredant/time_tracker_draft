@@ -22,6 +22,13 @@
 		63E640E41841BF8F0077EABD /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E640C81841BF8F0077EABD /* CoreData.framework */; };
 		63E640EC1841BF8F0077EABD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63E640EA1841BF8F0077EABD /* InfoPlist.strings */; };
 		63E640EE1841BF8F0077EABD /* _2WBTWorkoutTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E640ED1841BF8F0077EABD /* _2WBTWorkoutTests.m */; };
+		63E640FA1841C0110077EABD /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E640F81841C0110077EABD /* RootViewController.m */; };
+		63E640FB1841C0110077EABD /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E640F91841C0110077EABD /* RootViewController.xib */; };
+		63E640FF1841C2DA0077EABD /* TimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E640FD1841C2DA0077EABD /* TimerViewController.m */; };
+		63E641001841C2DA0077EABD /* TimerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E640FE1841C2DA0077EABD /* TimerViewController.xib */; };
+		63E641041841C3080077EABD /* WorkoutSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E641021841C3080077EABD /* WorkoutSetViewController.m */; };
+		63E641051841C3080077EABD /* WorkoutSetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E641031841C3080077EABD /* WorkoutSetViewController.xib */; };
+		63E641081841C6450077EABD /* WorkOutModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E641071841C6450077EABD /* WorkOutModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +60,17 @@
 		63E640E91841BF8F0077EABD /* 12WBTWorkoutTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "12WBTWorkoutTests-Info.plist"; sourceTree = "<group>"; };
 		63E640EB1841BF8F0077EABD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63E640ED1841BF8F0077EABD /* _2WBTWorkoutTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _2WBTWorkoutTests.m; sourceTree = "<group>"; };
+		63E640F71841C0110077EABD /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		63E640F81841C0110077EABD /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		63E640F91841C0110077EABD /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		63E640FC1841C2DA0077EABD /* TimerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerViewController.h; sourceTree = "<group>"; };
+		63E640FD1841C2DA0077EABD /* TimerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerViewController.m; sourceTree = "<group>"; };
+		63E640FE1841C2DA0077EABD /* TimerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimerViewController.xib; sourceTree = "<group>"; };
+		63E641011841C3080077EABD /* WorkoutSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkoutSetViewController.h; sourceTree = "<group>"; };
+		63E641021841C3080077EABD /* WorkoutSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkoutSetViewController.m; sourceTree = "<group>"; };
+		63E641031841C3080077EABD /* WorkoutSetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WorkoutSetViewController.xib; sourceTree = "<group>"; };
+		63E641061841C6450077EABD /* WorkOutModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WorkOutModel.h; sourceTree = "<group>"; };
+		63E641071841C6450077EABD /* WorkOutModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WorkOutModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +138,17 @@
 				63E640D91841BF8F0077EABD /* Images.xcassets */,
 				63E640D61841BF8F0077EABD /* _2WBTWorkout.xcdatamodeld */,
 				63E640CB1841BF8F0077EABD /* Supporting Files */,
+				63E640F71841C0110077EABD /* RootViewController.h */,
+				63E640F81841C0110077EABD /* RootViewController.m */,
+				63E640F91841C0110077EABD /* RootViewController.xib */,
+				63E640FC1841C2DA0077EABD /* TimerViewController.h */,
+				63E640FD1841C2DA0077EABD /* TimerViewController.m */,
+				63E640FE1841C2DA0077EABD /* TimerViewController.xib */,
+				63E641011841C3080077EABD /* WorkoutSetViewController.h */,
+				63E641021841C3080077EABD /* WorkoutSetViewController.m */,
+				63E641031841C3080077EABD /* WorkoutSetViewController.xib */,
+				63E641061841C6450077EABD /* WorkOutModel.h */,
+				63E641071841C6450077EABD /* WorkOutModel.m */,
 			);
 			path = 12WBTWorkout;
 			sourceTree = "<group>";
@@ -228,8 +257,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E641001841C2DA0077EABD /* TimerViewController.xib in Resources */,
 				63E640CF1841BF8F0077EABD /* InfoPlist.strings in Resources */,
 				63E640DA1841BF8F0077EABD /* Images.xcassets in Resources */,
+				63E641051841C3080077EABD /* WorkoutSetViewController.xib in Resources */,
+				63E640FB1841C0110077EABD /* RootViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,7 +281,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E640D81841BF8F0077EABD /* _2WBTWorkout.xcdatamodeld in Sources */,
+				63E641081841C6450077EABD /* WorkOutModel.m in Sources */,
 				63E640D51841BF8F0077EABD /* AppDelegate.m in Sources */,
+				63E640FF1841C2DA0077EABD /* TimerViewController.m in Sources */,
+				63E641041841C3080077EABD /* WorkoutSetViewController.m in Sources */,
+				63E640FA1841C0110077EABD /* RootViewController.m in Sources */,
 				63E640D11841BF8F0077EABD /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
