@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63E49B63184301210063DD18 /* Ping.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 63E49B62184301210063DD18 /* Ping.aiff */; };
+		63E49B65184308950063DD18 /* Glass.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 63E49B64184308950063DD18 /* Glass.aiff */; };
 		63E640C31841BF8F0077EABD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E640C21841BF8F0077EABD /* Foundation.framework */; };
 		63E640C51841BF8F0077EABD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E640C41841BF8F0077EABD /* CoreGraphics.framework */; };
 		63E640C71841BF8F0077EABD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E640C61841BF8F0077EABD /* UIKit.framework */; };
@@ -42,6 +44,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63E49B62184301210063DD18 /* Ping.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Ping.aiff; sourceTree = SOURCE_ROOT; };
+		63E49B64184308950063DD18 /* Glass.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Glass.aiff; sourceTree = "<group>"; };
 		63E640BF1841BF8F0077EABD /* 12WBTWorkout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 12WBTWorkout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E640C21841BF8F0077EABD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63E640C41841BF8F0077EABD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -156,6 +160,8 @@
 		63E640CB1841BF8F0077EABD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				63E49B64184308950063DD18 /* Glass.aiff */,
+				63E49B62184301210063DD18 /* Ping.aiff */,
 				63E640CC1841BF8F0077EABD /* 12WBTWorkout-Info.plist */,
 				63E640CD1841BF8F0077EABD /* InfoPlist.strings */,
 				63E640D01841BF8F0077EABD /* main.m */,
@@ -257,9 +263,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E49B65184308950063DD18 /* Glass.aiff in Resources */,
 				63E641001841C2DA0077EABD /* TimerViewController.xib in Resources */,
 				63E640CF1841BF8F0077EABD /* InfoPlist.strings in Resources */,
 				63E640DA1841BF8F0077EABD /* Images.xcassets in Resources */,
+				63E49B63184301210063DD18 /* Ping.aiff in Resources */,
 				63E641051841C3080077EABD /* WorkoutSetViewController.xib in Resources */,
 				63E640FB1841C0110077EABD /* RootViewController.xib in Resources */,
 			);
@@ -487,6 +495,7 @@
 				63E640F31841BF8F0077EABD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63E640F41841BF8F0077EABD /* Build configuration list for PBXNativeTarget "12WBTWorkoutTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +504,7 @@
 				63E640F61841BF8F0077EABD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

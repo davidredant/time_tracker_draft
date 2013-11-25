@@ -85,6 +85,7 @@
         }
     }
     
+    self.tableView.rowHeight=60.0f;
     [super viewDidLoad];
 
 
@@ -98,6 +99,8 @@
 }
 
 #pragma mark - Table view data source
+
+
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -122,20 +125,32 @@
     
     // Configure the cell...
     WorkOutModel *aWorkout=[self.workOutList objectAtIndex:[indexPath row]];
-    UILabel *label_name=[[UILabel alloc] initWithFrame:CGRectMake(30, 10, 100, 25)];
+    UILabel *label_name=[[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 25)];
     label_name.tag=kLabelTag;
-    label_name.font=[UIFont boldSystemFontOfSize:10];
+    label_name.font=[UIFont boldSystemFontOfSize:16];
     label_name.text=aWorkout.workoutName;
     [cell.contentView addSubview:label_name];
     
-    UILabel *label_Interval=[[UILabel alloc] initWithFrame:CGRectMake(10, 10, 50, 25)];
+    UILabel *label_Interval=[[UILabel alloc] initWithFrame:CGRectMake(10, 30, 100, 25)];
     label_Interval.tag=kLabelTag;
     label_Interval.font=[UIFont boldSystemFontOfSize:10];
-    label_Interval.text=[self ConvertIntToDateTime:aWorkout.workoutInterval];
+    label_Interval.text=[NSString stringWithFormat:@"%@%@",@"Intervals: ",[self ConvertIntToDateTime:aWorkout.workoutInterval]];
     [cell.contentView addSubview:label_Interval];
     
+    UILabel *label_rest=[[UILabel alloc] initWithFrame:CGRectMake(100, 30, 105, 25)];
+    label_rest.tag=kLabelTag;
+    label_rest.font=[UIFont boldSystemFontOfSize:10];
+    label_rest.text=[NSString stringWithFormat:@"%@%@",@"Rest: ",[self ConvertIntToDateTime:aWorkout.restLength]];
+    [cell.contentView addSubview:label_rest];
     
-    //NSString  *cellValue=[NSString stringWithFormat:@"%@", aWorkout.workoutName];
+    UILabel *label_Laps=[[UILabel alloc] initWithFrame:CGRectMake(180, 10, 105,50)];
+    label_Laps.tag=kLabelTag;
+    label_Laps.font=[UIFont boldSystemFontOfSize:20];
+    label_Laps.text=[NSString stringWithFormat:@"%@%d",@"X ",aWorkout.numberOfIntervals];
+    [cell.contentView addSubview:label_Laps];
+
+    
+    
     
     
     
@@ -204,10 +219,14 @@
      
      // Pass the selected object to the new view controller.
      */
-   UIViewController *atimerViewController=[[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
-    WorkOutModel *aWorkout=[self.workOutList objectAtIndex:[indexPath row]];
-    atimerViewController.title=aWorkout.workoutName;
+     TimerViewController *atimerViewController=[[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
+     WorkOutModel *aWorkout=[self.workOutList objectAtIndex:[indexPath row]];
+     atimerViewController.title=aWorkout.workoutName;
+    atimerViewController.aWorkout=aWorkout;
+    
    
+    
+    
        // Push the view controller.
     
     [self.navigationController pushViewController:atimerViewController animated:YES];
