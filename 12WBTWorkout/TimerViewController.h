@@ -11,11 +11,14 @@
 
 #define kWorkInterval @"Interval"
 #define tRestLength @"Rest"
+#define maxPlayLap 999
 
 @class WorkOutModel;
+@class TimerStage;
 
-@interface TimerViewController : UIViewController{
+@interface TimerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     NSTimer *timer;
+    
    
 }
 
@@ -24,15 +27,19 @@
 @property(nonatomic,strong) IBOutlet UILabel *countdownLabel;
 @property(nonatomic,strong) IBOutlet UIButton *btnStart;
 @property(nonatomic,strong) IBOutlet UIButton *btnPause;
+@property(nonatomic,strong) IBOutlet UIButton *btnReset;
+@property(nonatomic,strong) IBOutlet UITableView *tableStages;
 @property SystemSoundID sysSoundID;
+
 
 -(void)UpdateingCount:(NSTimer *)theTimer;
 -(void)countdownTimer;
 -(IBAction)StartTimer:(id)sender;
 -(IBAction)PauseTimer:(id)sender;
 -(IBAction)StopTimer:(id)sender;
--(void)SWitchStage :(NSString *)stage;
--(void)PrintLablelWithTimeFormat:(int)isecondremains;
+-(IBAction)Reset:(id)sender;
+-(void)SWitchStage;
+-(NSString *)PrintLablelWithTimeFormat:(int)isecondremains;
 
 
 @end

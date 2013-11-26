@@ -149,6 +149,16 @@
     label_Laps.text=[NSString stringWithFormat:@"%@%d",@"X ",aWorkout.numberOfIntervals];
     [cell.contentView addSubview:label_Laps];
 
+    UILabel *label_paly=[[UILabel alloc] initWithFrame:CGRectMake(250, 10, 50,30)];
+    
+    label_paly.tag=kLabelTag+1;
+    label_paly.font=[UIFont boldSystemFontOfSize:16];
+    label_paly.text=@"Start";
+    label_paly.backgroundColor=[UIColor grayColor];
+    label_paly.textColor=[UIColor whiteColor];
+    label_paly.textAlignment=NSTextAlignmentCenter;
+    [cell.contentView addSubview:label_paly];
+
     
     
     
@@ -231,7 +241,8 @@
     
     [self.navigationController pushViewController:atimerViewController animated:YES];
 }
- 
 
+
+ 
 
 @end

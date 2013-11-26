@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63BE9E57184450EA00FA65C0 /* TimerStage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BE9E56184450EA00FA65C0 /* TimerStage.m */; };
 		63E49B63184301210063DD18 /* Ping.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 63E49B62184301210063DD18 /* Ping.aiff */; };
 		63E49B65184308950063DD18 /* Glass.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 63E49B64184308950063DD18 /* Glass.aiff */; };
 		63E640C31841BF8F0077EABD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E640C21841BF8F0077EABD /* Foundation.framework */; };
@@ -44,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63BE9E55184450EA00FA65C0 /* TimerStage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerStage.h; sourceTree = "<group>"; };
+		63BE9E56184450EA00FA65C0 /* TimerStage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerStage.m; sourceTree = "<group>"; };
 		63E49B62184301210063DD18 /* Ping.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Ping.aiff; sourceTree = SOURCE_ROOT; };
 		63E49B64184308950063DD18 /* Glass.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Glass.aiff; sourceTree = "<group>"; };
 		63E640BF1841BF8F0077EABD /* 12WBTWorkout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 12WBTWorkout.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -153,6 +156,8 @@
 				63E641031841C3080077EABD /* WorkoutSetViewController.xib */,
 				63E641061841C6450077EABD /* WorkOutModel.h */,
 				63E641071841C6450077EABD /* WorkOutModel.m */,
+				63BE9E55184450EA00FA65C0 /* TimerStage.h */,
+				63BE9E56184450EA00FA65C0 /* TimerStage.m */,
 			);
 			path = 12WBTWorkout;
 			sourceTree = "<group>";
@@ -292,6 +297,7 @@
 				63E641081841C6450077EABD /* WorkOutModel.m in Sources */,
 				63E640D51841BF8F0077EABD /* AppDelegate.m in Sources */,
 				63E640FF1841C2DA0077EABD /* TimerViewController.m in Sources */,
+				63BE9E57184450EA00FA65C0 /* TimerStage.m in Sources */,
 				63E641041841C3080077EABD /* WorkoutSetViewController.m in Sources */,
 				63E640FA1841C0110077EABD /* RootViewController.m in Sources */,
 				63E640D11841BF8F0077EABD /* main.m in Sources */,
