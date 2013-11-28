@@ -23,7 +23,7 @@
 
 
 @class WorkOutModel;
-@interface WorkoutSetViewController : UITableViewController
+@interface WorkoutSetViewController : UITableViewController<UITextFieldDelegate>
 
 @property (nonatomic,strong) WorkOutModel *workOut;
 @property (nonatomic,strong) NSArray *fieldName;
@@ -31,12 +31,14 @@
 @property (nonatomic,strong) UITextField *txtFieldEditing;
 
 @property (nonatomic,strong) UIDatePicker *datePicker;
+//@property (nonatomic,strong) IBOutlet UIPickerView *datePicker;
 
-@property int indexOfEditingTextField;
+@property NSUInteger indexOfEditingTextField;
 
 
 -(IBAction)cancel:(id)sender;
 -(IBAction)save:(id)sender;
 -(void)textFieldDone:(id)sender;
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 
 @end

@@ -24,16 +24,18 @@
 @synthesize btnStart;
 @synthesize tableStages;
 
-int hours,minutes,seconds;
-int secondremains;
-int counts=4;
+NSUInteger hours,minutes,seconds;
+NSUInteger secondremains;
+NSUInteger counts=4;
 
-int RecordCount=1;
+NSUInteger RecordCount=1;
 NSString *StageName;
 
 NSURL *sound_url_ping=nil;
 NSURL *sound_url_glass=nil;
 NSMutableArray *lstStages;
+NSMutableArray *original_lstStages;
+
 
 -(void)UpdateingCount:(NSTimer *)theTimer{
     if (counts>1) {
@@ -69,7 +71,14 @@ NSMutableArray *lstStages;
             
         }
     }
-    countdownLabel.text=[self PrintLablelWithTimeFormat:secondremains];
+    
+    if (counts>0) {
+        countdownLabel.text=[NSString stringWithFormat:@"%d",counts];
+    }
+    else{
+      //  [self SWitchStage];
+        countdownLabel.text=[self PrintLablelWithTimeFormat:secondremains];    }
+   
 }
 
 -(void)countdownTimer{
@@ -80,17 +89,39 @@ NSMutableArray *lstStages;
 }
 
 -(IBAction)StartTimer:(id)sender{
-    if (timer==nil) {
+  
+    UIButton *button=sender;
+    NSString *currentButton=[sender currentTitle];
+    if ([currentButton isEqualToString:@"Start"]) {
+          [button setTitle:@"Stop" forState:UIControlStateNormal];
         
-                [self countdownTimer];
+        if (timer==nil) {
+            
+            [self countdownTimer];
+
+    
     }
+            }
+    else
+    {
+        [self PauseTimer:sender];
+        
+    }
+
 }
 
 -(IBAction)PauseTimer:(id)sender{
+    UIButton *button=sender;
+    NSString *currentButton=[sender currentTitle];
+    if ([currentButton isEqualToString:@"Stop"]) {
+        [button setTitle:@"Start" forState:UIControlStateNormal];
+    }
+
     if (timer!=nil) {
         [timer invalidate];
         timer=nil;
-    }}
+    }
+}
 
 -(IBAction)StopTimer:(id)sender{
     secondremains=0;
@@ -102,7 +133,7 @@ NSMutableArray *lstStages;
     }
 }
 
--(void)MakeAlert:(int)seconds{
+-(void)MakeAlert:(NSUInteger)seconds{
     if (seconds>=6)  return;
     
     if (seconds>=1) {
@@ -123,24 +154,56 @@ NSMutableArray *lstStages;
 
 -(IBAction)Reset:(id)sender
 {
-    
-}
+    if (timer!=nil) {
+        [timer invalidate];
+        timer=nil;
+    }
 
--(void)SWitchStage{
+    lstStages=[NSMutableArray arrayWithArray:original_lstStages];
+    [tableStages reloadData];
     
-    TimerStage *astage=[lstStages objectAtIndex:RecordCount];
+    TimerStage *astage=[lstStages objectAtIndex:0];
     secondremains=astage.length;
     
     stageLabel.text=[NSString stringWithFormat:@"Lap %d %@",astage.lap,astage.stageName];
-    RecordCount++;
-    astage=nil;
+    countdownLabel.text=[self PrintLablelWithTimeFormat:secondremains];
+    counts=4;
+
+
     
-    //remove first row from tableview
-    [tableStages setEditing:!tableStages.editing animated:YES];
-    [tableStages beginUpdates];
-    NSArray *deletingIndexPaths=[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:0], nil];
-    [tableStages deleteRowsAtIndexPaths:deletingIndexPaths withRowAnimation:UITableViewRowAnimationTop];
-    [tableStages endUpdates];
+}
+
+
+-(void)SWitchStage{
+    
+    if ([lstStages count]>0) {
+        [lstStages removeObjectAtIndex:0] ;
+        [tableStages reloadData];
+        TimerStage *astage=[lstStages objectAtIndex:0];
+        
+        secondremains=astage.length;
+        
+        stageLabel.text=[NSString stringWithFormat:@"Lap %d %@",astage.lap,astage.stageName];
+        
+        astage=nil;
+
+    }
+    else
+    {
+        
+        if (timer!=nil) {
+            [timer invalidate];
+            timer=nil;
+            stageLabel.text=@"WELL DONE";
+        }
+        
+        
+          }
+
+    
+    
+    
+    
     
 }
 
@@ -151,13 +214,13 @@ NSMutableArray *lstStages;
     }
     lstStages=[[NSMutableArray alloc] initWithCapacity:workout.numberOfIntervals*2];
     
-    int lengthforInteval=workout.workoutInterval;
-    int lengthforRest=workout.restLength;
-    int loops=workout.numberOfIntervals;
+    NSUInteger lengthforInteval=workout.workoutInterval;
+    NSUInteger lengthforRest=workout.restLength;
+    NSUInteger loops=workout.numberOfIntervals;
     
     workout=nil;
    
-    for (int i=1; i<=loops; i++) {
+    for (NSUInteger i=1; i<=loops; i++) {
         TimerStage *stage1=[[TimerStage alloc]init];
         stage1.lap=i;
         stage1.stageName=@"Interval";
@@ -178,11 +241,13 @@ NSMutableArray *lstStages;
 
     }
     
+    original_lstStages=[NSMutableArray arrayWithArray:lstStages];
+    
     
     
 }
 
--(NSString *)PrintLablelWithTimeFormat:(int)isecondremains{
+-(NSString *)PrintLablelWithTimeFormat:(NSUInteger)isecondremains{
     hours=isecondremains/3600;
     minutes=(isecondremains%3600)/60;
     seconds=(isecondremains%3600)%60;
@@ -226,6 +291,7 @@ NSMutableArray *lstStages;
     tableStages.delegate=self;
     [self.view addSubview:self.tableStages];
     
+    
     [super viewDidLoad];
 }
 
@@ -240,7 +306,7 @@ NSMutableArray *lstStages;
 }
 
 -(void)dealloc{
-   // AudioServicesDisposeSystemSoundID(sysSound);
+   AudioServicesDisposeSystemSoundID(sysSoundID);
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -272,11 +338,44 @@ NSMutableArray *lstStages;
 }
 
 
-
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
 }
+
+
+
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+
+
+
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+
+
+
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+
+
+
 -(void)viewDidAppear:(BOOL)animated{
 }
 

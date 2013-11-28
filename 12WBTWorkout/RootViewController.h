@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#define LabelPlayTag 999
 
 @class TimerViewController;
 @class WorkoutSetViewController;
@@ -18,6 +19,7 @@
 @property(nonatomic,strong) NSMutableArray *workOutList;
 @property(nonatomic, strong) IBOutlet TimerViewController *timerViewController;
 @property(nonatomic,strong) IBOutlet WorkoutSetViewController *workoutSetViewController;
+
 
 -(IBAction)SwitchToWorkoutSetView:(id)sender;
 

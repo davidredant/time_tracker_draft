@@ -29,12 +29,27 @@
 }
 
 -(IBAction)save:(id)sender{
+    UITextField *lastTextField=(UITextField *)[self.view viewWithTag:indexOfEditingTextField];
+    [lastTextField resignFirstResponder];
+    NSString *message=[self IsValidated];
+    if ([message length]>0) {
+        NSString *m=[NSString stringWithFormat:@"%@ could not be empty",message];
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Warning" message:m delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+       
+       
+        [alert show];
+        return;
+    }else
+    {
     
-    WorkOutModel *aWorkOut=[[WorkOutModel alloc] init];
     if (txtFieldEditing !=Nil) {
         NSNumber *tagNum=[[NSNumber alloc] initWithInt:txtFieldEditing.tag];
         [tempValues setObject:txtFieldEditing forKey:tagNum];
     }
+    
+    
+  
+    WorkOutModel *aWorkOut=[[WorkOutModel alloc] init];
     for (NSNumber *key in [tempValues allKeys]) {
         switch ([key intValue]) {
             case kWorkoutNameIndex:
@@ -63,6 +78,7 @@
     
     AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context=[appDelegate managedObjectContext];
+
     NSManagedObject *newWorkOut;
     newWorkOut=[NSEntityDescription insertNewObjectForEntityForName:@"Workout" inManagedObjectContext:context];
     
@@ -70,7 +86,7 @@
     [newWorkOut setValue: [NSNumber numberWithInteger:aWorkOut.workoutInterval] forKey:@"intervals"];
     [newWorkOut setValue: [NSNumber numberWithInteger:aWorkOut.restLength] forKey:@"rest"];
     [newWorkOut setValue: [NSNumber numberWithInteger:aWorkOut.numberOfIntervals] forKey:@"laps"];
-    
+    newWorkOut=nil;
      NSError *error;
     [context save:&error];
     
@@ -84,21 +100,41 @@
      UITableViewController *parent=[allControllers lastObject];
      
      [parent.tableView reloadData];
+    }
     
     
     
 }
 
--(int)ConvertTimerToInt:(NSString *)timerInString{
+-(NSString *)IsValidated{
+    NSNumber *key;
+    key=[[NSNumber alloc] initWithInt:(NSUInteger)kWorkoutNameIndex];
+    if([tempValues objectForKey:key]==nil)
+            return @"Workout Name";
+    key=[[NSNumber alloc] initWithInt:(NSUInteger)kWorkoutInterval];
+     if([tempValues objectForKey:key]==nil)
+         return @"Workout Interval";
+            
+    key=[[NSNumber alloc] initWithInt:(NSUInteger)kRestLength];
+     if([tempValues objectForKey:key]==nil)
+         return @"Rest Duration";
+   key=[[NSNumber alloc] initWithInt:(NSUInteger)kNumberOfIntervals];
+   if([tempValues objectForKey:key]==nil)
+       return @"Number of Intervals";
+              return @"";
+    
+}
+
+-(NSUInteger)ConvertTimerToInt:(NSString *)timerInString{
     NSDateFormatter *formatter=[[NSDateFormatter alloc] init];
     formatter.dateFormat=@"HH:mm:ss";
     NSDate *timeDate=[formatter dateFromString:timerInString];
     formatter.dateFormat=@"HH";
-    int hour=[[formatter stringFromDate:timeDate] intValue];
+    NSUInteger hour=[[formatter stringFromDate:timeDate] intValue];
     formatter.dateFormat=@"mm";
-    int minute=[[formatter stringFromDate:timeDate] intValue];
+    NSUInteger minute=[[formatter stringFromDate:timeDate] intValue];
     formatter.dateFormat=@"ss";
-    int second=[[formatter stringFromDate:timeDate] intValue];
+    NSUInteger second=[[formatter stringFromDate:timeDate] intValue];
     second +=hour*3600+minute*60;
     return second;
 }
@@ -202,7 +238,7 @@
         
         txtField.textAlignment=NSTextAlignmentRight;
         
-        txtField.clearsOnBeginEditing=NO;
+        txtField.clearsOnBeginEditing=YES;
         [txtField setBorderStyle:UITextBorderStyleRoundedRect];
         [txtField setDelegate:self];
         txtField.returnKeyType=UIReturnKeyDone;
@@ -219,7 +255,7 @@
             txtField=(UITextField *)aView;
     }
     label.text=[fieldName objectAtIndex:row];
-    NSNumber *rowNum=[[NSNumber alloc] initWithInt:row];
+    NSNumber *rowNum=[[NSNumber alloc] initWithInt:(int)row];
     switch (row) {
         case kWorkoutNameIndex:
             
@@ -234,8 +270,12 @@
             [self LoadDatePicker:txtField];
             if ([[tempValues allKeys] containsObject:rowNum]) {
                 txtField.text=[tempValues objectForKey:rowNum];
-            }else{
+            }else if(self.workOut!=nil){
                 txtField.text=[NSString stringWithFormat:@"%d",self.workOut.workoutInterval];
+                }
+            else
+            {
+                txtField.text=@"00:00:00";
             }
             break;
         case kRestLength:
@@ -243,9 +283,12 @@
             [self LoadDatePicker:txtField];
             if ([[tempValues allKeys] containsObject:rowNum]) {
                 txtField.text=[tempValues objectForKey:rowNum];
-            }else{
-                
-                txtField.text=[NSString  stringWithFormat:@"%d",self.workOut.restLength];
+            }else if(self.workOut!=nil){
+                txtField.text=[NSString stringWithFormat:@"%d",self.workOut.workoutInterval];
+            }
+            else
+            {
+                txtField.text=@"00:00:00";
             }
             break;
         case kNumberOfIntervals:
@@ -278,9 +321,14 @@
     UITextField *txtField=nil;
     txtField=(UITextField *)sender;
     datePicker=[[UIDatePicker alloc] init];
+     //datePicker.frame=CGRectMake(30, 220,250, 180);
     [datePicker setDatePickerMode:UIDatePickerModeCountDownTimer];
+    datePicker.backgroundColor=[UIColor grayColor];
+   
     [datePicker addTarget:self action:@selector(updateTextField:) forControlEvents:UIControlEventValueChanged];
-    [txtField setInputView:datePicker];
+    
+     [txtField setInputView:datePicker];
+    
 }
 
 -(void)updateTextField:(id)sender{
@@ -293,6 +341,19 @@
     [dateFormatter setDateFormat:@"HH:mm:ss"];
     
     txtField.text=[NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:picker.date]];
+}
+
+
+-(UIView *)findFirstRresponder:(UIView *)view{
+    if ([view isFirstResponder]) {
+        return view;
+    }
+    for (UIView *subview in [view subviews]) {
+        if ([self findFirstRresponder:subview]) {
+            return subview;
+        }
+    }
+    return nil;
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
@@ -310,63 +371,18 @@
     
 }
 
-
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSUInteger numTaps=[[touches anyObject] tapCount];
+    NSUInteger numTouches=[touches count];
+    if (numTouches==2) {
+        UITextField *txtEditing=(UITextField *)[self.view viewWithTag:indexOfEditingTextField];
+        [txtEditing resignFirstResponder];
+    }
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
-/*
-#pragma mark - Table view delegate
 
-// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-}
- 
- */
 
 @end

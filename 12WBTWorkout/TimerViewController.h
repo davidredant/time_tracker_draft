@@ -39,7 +39,7 @@
 -(IBAction)StopTimer:(id)sender;
 -(IBAction)Reset:(id)sender;
 -(void)SWitchStage;
--(NSString *)PrintLablelWithTimeFormat:(int)isecondremains;
+-(NSString *)PrintLablelWithTimeFormat:(NSUInteger)isecondremains;
 
 
 @end

@@ -22,6 +22,8 @@
 @synthesize workoutSetViewController;
 @synthesize workOutList;
 
+BOOL IFShowLabel=YES;
+
 -(IBAction)SwitchToWorkoutSetView:(id)sender{
     
     UIViewController *workoutViewController=[[WorkoutSetViewController alloc] initWithNibName:@"WorkoutSetViewController" bundle:Nil];
@@ -42,25 +44,21 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    //self.workOutList=[[NSMutableArray alloc] initWithObjects:@"workout1",@"workout2", nil];
-    self.workOutList=[[NSMutableArray alloc] init];
+       [super viewDidLoad];
+
     self.title=@"Timer";
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.navigationItem.leftBarButtonItem=self.editButtonItem;
+     self.navigationItem.leftBarButtonItem=self.editButtonItem;
     
     //add customer button at right top
     UIBarButtonItem *newButton;
     newButton=[[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(SwitchToWorkoutSetView:)];
     self.navigationItem.rightBarButtonItem=newButton;
     
-    //begin loading list of workout from save file
     
+}
+
+-(void)UpdateDataSource: (int)Index{
     AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context=[appDelegate managedObjectContext];
     NSEntityDescription *WorkOut=[NSEntityDescription entityForName:@"Workout" inManagedObjectContext:context];
@@ -72,25 +70,14 @@
     NSError *error;
     NSArray *objects=[context executeFetchRequest:request error:&error];
     
-    if ([objects count]>0) {
-        for (NSManagedObject *obj in objects){
-            
-            WorkOutModel *aWorkOut=[[WorkOutModel alloc] init];
-            aWorkOut.workoutName=[obj valueForKey:@"name"];
-            aWorkOut.workoutInterval=[[obj valueForKey:@"intervals"] integerValue];
-            aWorkOut.restLength=[[obj valueForKey:@"rest"] integerValue];
-            aWorkOut.numberOfIntervals=[[obj valueForKey:@"laps"] integerValue];
-            
-            [self.workOutList addObject:aWorkOut];
-        }
-    }
+    NSManagedObject *dworkout=[objects objectAtIndex:Index];
+    [context deleteObject:dworkout];
+    [context save:&error];
     
-    self.tableView.rowHeight=60.0f;
-    [super viewDidLoad];
-
-
-
+    
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -149,15 +136,18 @@
     label_Laps.text=[NSString stringWithFormat:@"%@%d",@"X ",aWorkout.numberOfIntervals];
     [cell.contentView addSubview:label_Laps];
 
-    UILabel *label_paly=[[UILabel alloc] initWithFrame:CGRectMake(250, 10, 50,30)];
+   
+        UILabel *label_paly=[[UILabel alloc] initWithFrame:CGRectMake(220, 35, 40,15)];
+        
+        label_paly.tag=LabelPlayTag;
+        label_paly.font=[UIFont boldSystemFontOfSize:12];
+        label_paly.text=@"Start";
+        label_paly.backgroundColor=[UIColor grayColor];
+        label_paly.textColor=[UIColor whiteColor];
+        label_paly.textAlignment=NSTextAlignmentCenter;
+        [cell.contentView addSubview:label_paly];
+   
     
-    label_paly.tag=kLabelTag+1;
-    label_paly.font=[UIFont boldSystemFontOfSize:16];
-    label_paly.text=@"Start";
-    label_paly.backgroundColor=[UIColor grayColor];
-    label_paly.textColor=[UIColor whiteColor];
-    label_paly.textAlignment=NSTextAlignmentCenter;
-    [cell.contentView addSubview:label_paly];
 
     
     
@@ -167,9 +157,9 @@
     return cell;
 }
 
--(NSString *)ConvertIntToDateTime :(int)inputSeconds{
+-(NSString *)ConvertIntToDateTime :(NSUInteger)inputSeconds{
     NSString *formatterDate=@"00:00:00";
-    int hours,minutes,seconds;
+    NSUInteger hours,minutes,seconds;
     hours=inputSeconds/3600;
     minutes=(inputSeconds%3600)/60;
     seconds=(inputSeconds%3600)%60;
@@ -177,44 +167,30 @@
     return formatterDate;
 }
 
-/*
+
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-*/
 
-/*
+
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
+        [[self workOutList] removeObjectAtIndex:indexPath.row];
+        [self UpdateDataSource:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 
 #pragma mark - Table view delegate
@@ -242,7 +218,42 @@
     [self.navigationController pushViewController:atimerViewController animated:YES];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+ 
+   
+    //begin loading list of workout from save file
+     self.workOutList=[[NSMutableArray alloc] init];
+    AppDelegate *appDelegate=[[UIApplication sharedApplication] delegate];
 
+    NSManagedObjectContext *context=[appDelegate managedObjectContext];
+    NSEntityDescription *WorkOut=[NSEntityDescription entityForName:@"Workout" inManagedObjectContext:context];
+
+    NSFetchRequest *request=[[NSFetchRequest alloc] init];
+    
+    
+    [request setEntity:WorkOut];
+    
+    NSError *error;
+    NSArray *objects=[context executeFetchRequest:request error:&error];
+    
+    if ([objects count]>0) {
+        for (NSManagedObject *obj in objects){
+            
+            WorkOutModel *aWorkOut=[[WorkOutModel alloc] init];
+            aWorkOut.workoutName=[obj valueForKey:@"name"];
+            aWorkOut.workoutInterval=[[obj valueForKey:@"intervals"] integerValue];
+            aWorkOut.restLength=[[obj valueForKey:@"rest"] integerValue];
+            aWorkOut.numberOfIntervals=[[obj valueForKey:@"laps"] integerValue];
+            
+            [self.workOutList addObject:aWorkOut];
+        }
+    }
+    
+    self.tableView.dataSource=self;
+    
+    self.tableView.rowHeight=60.0f;
+    [self.tableView reloadData];
+}
  
 
 @end
