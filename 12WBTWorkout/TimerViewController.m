@@ -37,6 +37,25 @@ NSMutableArray *lstStages;
 NSMutableArray *original_lstStages;
 
 
+#pragma -
+#pragma mark application save resign
+/* variables for application resign and reactivate*/
+NSString *kSavedStages=@"KeyStages";
+ 
+
+-(void)savePlayStatus{
+    [[NSUserDefaults standardUserDefaults] setObject:lstStages forKey:kSavedStages];
+}
+
+-(void)loadPlayStatus{
+    lstStages =[[NSUserDefaults standardUserDefaults] objectForKey:kSavedStages];
+}
+
+//\[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(PausePlay:) name:UIApplicationWillResignAcitveNotification object:nil];
+
+
+#pragma -
+#pragma make Timer functions
 -(void)UpdateingCount:(NSTimer *)theTimer{
     if (counts>1) {
         AudioServicesCreateSystemSoundID((__bridge CFURLRef)sound_url_ping,&sysSoundID);
@@ -176,7 +195,7 @@ NSMutableArray *original_lstStages;
 
 -(void)SWitchStage{
     
-    if ([lstStages count]>0) {
+    if ([lstStages count]>1) {
         [lstStages removeObjectAtIndex:0] ;
         [tableStages reloadData];
         TimerStage *astage=[lstStages objectAtIndex:0];
@@ -195,6 +214,8 @@ NSMutableArray *original_lstStages;
             [timer invalidate];
             timer=nil;
             stageLabel.text=@"WELL DONE";
+            lstStages=nil;
+            [tableStages reloadData];
         }
         
         
@@ -264,6 +285,8 @@ NSMutableArray *original_lstStages;
     return self;
 }
 
+#pragma -
+#pragma make ViewDidLoad
 - (void)viewDidLoad
 {
    
@@ -314,6 +337,9 @@ NSMutableArray *original_lstStages;
     // Return the number of sections.
     return 1;
 }
+
+#pragma -
+#pragma make table delegate and datasource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

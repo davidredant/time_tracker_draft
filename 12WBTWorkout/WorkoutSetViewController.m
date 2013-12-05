@@ -65,6 +65,7 @@
                 aWorkOut.restLength=[self ConvertTimerToInt:[tempValues objectForKey:key]];
                 break;
             case kNumberOfIntervals:
+             
                 aWorkOut.numberOfIntervals=[[tempValues objectForKey:key] intValue];
                 break;
                 
@@ -173,6 +174,11 @@
     NSMutableDictionary *dictionary=[[NSMutableDictionary alloc] init];
     self.tempValues=dictionary;
     
+    /*
+    UITapGestureRecognizer *tapGR=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewDoubleTapped:)];
+    tapGR.numberOfTapsRequired=2;
+    */
+   
 
     [super viewDidLoad];
 
@@ -222,14 +228,16 @@
         UITextField *txtField=[[UITextField alloc] initWithFrame:CGRectMake(150, 12, 100, 25)];
         
         if (indexPath.row==3) {
+            txtField.returnKeyType=UIReturnKeyDone;
             txtField=[[UITextField alloc] initWithFrame:CGRectMake(150, 12, 50, 25)];
             UISwitch *switchInfinite=[[UISwitch alloc] initWithFrame:CGRectMake(240, 12, 20, 10)];
             switchInfinite.on=FALSE;
-            
+            [switchInfinite addTarget:self action:@selector(setIndefinate:) forControlEvents:UIControlEventValueChanged];
             [cell.contentView addSubview:switchInfinite];
             UILabel *labelForSwitch=[[UILabel alloc] initWithFrame:CGRectMake(205, 12, 80, 25)];
             labelForSwitch.text=@"INFINITE";
             labelForSwitch.font=[UIFont systemFontOfSize:8];
+            
             [cell.contentView addSubview:labelForSwitch];
             
             
@@ -241,7 +249,7 @@
         txtField.clearsOnBeginEditing=YES;
         [txtField setBorderStyle:UITextBorderStyleRoundedRect];
         [txtField setDelegate:self];
-        txtField.returnKeyType=UIReturnKeyDone;
+       // txtField.returnKeyType=UIReturnKeyDone;
         [txtField addTarget:self action:@selector(textFieldDone:) forControlEvents:UIControlEventEditingDidEndOnExit];
         [cell.contentView addSubview:txtField];
     }
@@ -258,7 +266,7 @@
     NSNumber *rowNum=[[NSNumber alloc] initWithInt:(int)row];
     switch (row) {
         case kWorkoutNameIndex:
-            
+            txtField.keyboardType=UIKeyboardTypeEmailAddress;
             if ([[tempValues allKeys] containsObject:rowNum]) {
                 txtField.text=[tempValues objectForKey:rowNum];
             }else{
@@ -294,6 +302,7 @@
         case kNumberOfIntervals:
             
             txtField.keyboardType=UIKeyboardTypeDecimalPad;
+            txtField.tag=kNumberOfIntervals;
             if ([[tempValues allKeys] containsObject:rowNum]) {
                 txtField.text=[tempValues objectForKey:rowNum];
             }else{
@@ -311,6 +320,7 @@
     
     txtField.tag=row;
     
+  
     
     
     return cell;
@@ -321,13 +331,17 @@
     UITextField *txtField=nil;
     txtField=(UITextField *)sender;
     datePicker=[[UIDatePicker alloc] init];
-     //datePicker.frame=CGRectMake(30, 220,250, 180);
+    
     [datePicker setDatePickerMode:UIDatePickerModeCountDownTimer];
     datePicker.backgroundColor=[UIColor grayColor];
    
     [datePicker addTarget:self action:@selector(updateTextField:) forControlEvents:UIControlEventValueChanged];
     
-     [txtField setInputView:datePicker];
+    UITapGestureRecognizer *tapGR=[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewDoubleTapped:)];
+    tapGR.numberOfTapsRequired=1;
+    [datePicker addGestureRecognizer:tapGR];
+    
+    [txtField setInputView:datePicker];
     
 }
 
@@ -341,6 +355,44 @@
     [dateFormatter setDateFormat:@"HH:mm:ss"];
     
     txtField.text=[NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:picker.date]];
+}
+
+
+-(void)setIndefinate:(id)sender{
+     UISwitch *switchInfinite=(UISwitch *)sender;
+     UITextField * txtFieldLoops=(UITextField*)[self.view viewWithTag:kNumberOfIntervals];
+    if(switchInfinite.on)
+     {
+         
+         txtFieldLoops.text=@"∞";
+         txtFieldLoops.enabled=NO;
+
+         
+     }
+    else{
+        txtFieldLoops.text=@"";
+        txtFieldLoops.enabled=YES;
+    }
+    
+    
+}
+
+-(void)viewDoubleTapped:(UITapGestureRecognizer *)tapGR{
+    UITextField *txtField=nil;
+    txtField=(UITextField *)[self.view viewWithTag:indexOfEditingTextField];
+    
+    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm:ss"];
+    UIDatePicker *picker=(UIDatePicker *)tapGR.view;
+   
+    
+     NSString *curDate=[NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:picker.date]];
+    if([curDate isEqualToString:@"00:00:00"])
+    {
+        curDate=@"00:01:00";
+    }
+    txtField.text=curDate;
+    [txtField resignFirstResponder];
 }
 
 
@@ -363,13 +415,20 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     
+    NSString *val=@"99";
+    if ([textField.text isEqualToString:@"∞"]) {
+            val=@"99";
+    }
+    else
+        val=textField.text;
     NSNumber *tagNum=[[NSNumber alloc] initWithInt:textField.tag];
-    [tempValues setObject:textField.text forKey:tagNum];
+    [tempValues setObject:val forKey:tagNum];
     
     [self textFieldDone:self];
     
     
 }
+/*
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSUInteger numTaps=[[touches anyObject] tapCount];
@@ -382,6 +441,26 @@
 
 
 
+-(void)registerForKeyboardNotifications{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden) name:UIKeyboardWillHideNotification object:nil];
+}
+
+-(void)keyboardWasShown:(NSNotification *)aNotification{
+    NSDictionary *info=[aNotification userInfo];
+    CGSize kbSize=[[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    
+    
+    UIEdgeInsets contentInsets=UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    
+    scrollView.contentInsets=contentInsets;
+    scrollView.scrollIndicatorInsets=contentInsets;
+    
+    
+    
+}
+*/
 
 
 

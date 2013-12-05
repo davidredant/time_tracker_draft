@@ -19,6 +19,7 @@
 @property(nonatomic,strong) NSMutableArray *workOutList;
 @property(nonatomic, strong) IBOutlet TimerViewController *timerViewController;
 @property(nonatomic,strong) IBOutlet WorkoutSetViewController *workoutSetViewController;
+@property BOOL IsEditing;
 
 
 -(IBAction)SwitchToWorkoutSetView:(id)sender;

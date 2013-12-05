@@ -21,6 +21,7 @@
 @synthesize timerViewController;
 @synthesize workoutSetViewController;
 @synthesize workOutList;
+@synthesize IsEditing;
 
 BOOL IFShowLabel=YES;
 
@@ -148,8 +149,7 @@ BOOL IFShowLabel=YES;
         [cell.contentView addSubview:label_paly];
    
     
-
-    
+      
     
     
     
@@ -167,7 +167,19 @@ BOOL IFShowLabel=YES;
     return formatterDate;
 }
 
+-(void) setEditing:(BOOL)editing animated:(BOOL)animated{
+    [super setEditing:editing animated:animated];
+    if (editing) {
+        IsEditing=YES;
+    }
+    else
+    {
+        IsEditing=NO;
+    }
+}
 
+#pragma -
+#pragma mark table delegate datasource
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -187,13 +199,13 @@ BOOL IFShowLabel=YES;
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        
+
     }   
 }
 
 
 
-#pragma mark - Table view delegate
 
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -205,17 +217,34 @@ BOOL IFShowLabel=YES;
      
      // Pass the selected object to the new view controller.
      */
-     TimerViewController *atimerViewController=[[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
-     WorkOutModel *aWorkout=[self.workOutList objectAtIndex:[indexPath row]];
-     atimerViewController.title=aWorkout.workoutName;
-    atimerViewController.aWorkout=aWorkout;
+    if ([self IsEditing]) {
+        
+        WorkoutSetViewController *workoutViewController=[[WorkoutSetViewController alloc] initWithNibName:@"WorkoutSetViewController" bundle:Nil];
+        
+      
+        WorkOutModel *aWorkout=[self.workOutList objectAtIndex:[indexPath row]];
+        workoutViewController.title=aWorkout.workoutName;
+        workoutViewController.workOut=aWorkout;
+       AppDelegate *delegate=[[UIApplication sharedApplication]delegate];
+        
+        [delegate.navigationController pushViewController:workoutViewController animated:YES];
+
+    }
+    else{
+    
+        TimerViewController *atimerViewController=[[TimerViewController alloc] initWithNibName:@"TimerViewController" bundle:nil];
+       WorkOutModel *aWorkout=[self.workOutList objectAtIndex:[indexPath row]];
+        atimerViewController.title=aWorkout.workoutName;
+        atimerViewController.aWorkout=aWorkout;
+       [self.navigationController pushViewController:atimerViewController animated:YES];
+    }
     
    
     
-    
-       // Push the view controller.
-    
-    [self.navigationController pushViewController:atimerViewController animated:YES];
+}
+
+-(UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellAccessoryDisclosureIndicator;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
